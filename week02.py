@@ -8,3 +8,4 @@ while True:
     elif menu == "3":
         print("Order Finished")
         break
+print("2주차 업데이트")

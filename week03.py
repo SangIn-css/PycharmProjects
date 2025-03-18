@@ -2,14 +2,18 @@
 drinks = ["Ice Americano", "Cafe Latte", "Watermelon Juice"]
 prices = [2000, 3000]
 amount = [0, 0, 0]
+total_price = 0
+
+
 
 menu_lists = ""
 for k in range(len(drinks)):
     menu_lists = menu_lists + f"{k+1}) {drinks[k]} {prices[k]}won   "
 menu_lists = menu_lists + f"{len(drinks)+1}"
 while True:
-    menu = input(menu_lists)
-    if menu == "1":
+    menu = int(input(menu_lists))
+    if len(drinks)>= menu >= 1:
+        order_process(menu - 1)
         print(f"{drinks[0]} ordered. Price : {prices[0]}won")
         total_price = total_price + prices[0]
         amounts[0] = amount[0] + 1

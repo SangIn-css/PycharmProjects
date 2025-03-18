@@ -10,7 +10,7 @@ def time_measure_decorator(f):
     return wrapper
 
 @time_measure_decorator
-def one_to_n_loop(n):
+def one_to_n_loop(n):                   #decorator를 사용하면 안쪽 코드를 손을 안 대고 수정가능
     result = 0
     for i in range(1, n+1):
         result = result + i
@@ -20,7 +20,7 @@ def one_to_n_math(n):
     r = n * (n + 1) // 2
     return r
 
-number = int(input("정수 입력 : "))
+number = int(input("Input Number : "))
 
 print(one_to_n_math(number))
 print(one_to_n_loop(number))

@@ -9,6 +9,10 @@ total_price = 0
 # total_price = 0
 
 def order_process(idx: int):
+    """
+    beverage function
+    :param idx: list's index number
+    """
     global total_price
     print(f"{drinks[idx]} ordered. Price : {prices[idx]}won")
     total_price = total_price + prices[idx]
@@ -20,6 +24,10 @@ def order_process(idx: int):
 #    menu_lists = menu_lists + f"{k+1}) {drinks[k]} {prices[k]}won  "
 menu_lists = " ".join([f"{k+1}) {drinks[k]} {prices[k]}won  " for k in range(len(drinks))])
 menu_lists = menu_lists + f"{len(drinks)+1}) Exit : "
+
+#help(abs)
+#help(len)
+help(order_process)
 
 while True:
     menu = int(input(menu_lists))

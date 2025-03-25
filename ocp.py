@@ -15,6 +15,7 @@ def one_to_n_loop(n):                   #decorator를 사용하면 안쪽 코드
     for i in range(1, n+1):
         result = result + i
     return result
+
 @time_measure_decorator
 def one_to_n_math(n):
     r = n * (n + 1) // 2

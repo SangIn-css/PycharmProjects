@@ -1,72 +1,99 @@
-drinks = ["Ice Americano", "Cafe Latte", "Watermelon Juice"]
-prices = [2000, 3000, 4900]
-amounts = [0] * len(drinks)
-total_price = 0
+from typing import List  # type hint
 
-# drinks = ["Ice Americano", "Cafe Latte"]
-# prices = [2000, 3000]
-# amounts = [0, 0]
-# total_price = 0
+class CafeOrder:
+    DISCOUNT_THRESHOLD = 10000
+    DISCOUNT_RATE = 0.1
 
-DISCOUNT_THRESHOLD = 10000
-DISCOUNT_RATE = 0.1
+    def __init__(self, drinks: List[str], prices: List[int]):
+        """
+        Initialization method
+        :param drinks: beverage name list
+        :param prices: beverage price list
+        """
+        self.drinks = drinks
+        self.prices = prices
+        self.amounts = [0] * len(drinks)
+        self.total_price = 0
 
-def apply_discount(price: int):
-    """
-    discount calculate
-    :param price: price before discount
-    :return: price after discount
-    """
-    if price >= DISCOUNT_THRESHOLD:
-        discount = price * DISCOUNT_RATE
-        return price - discount
+    def apply_discount(self, price: int) -> float:
+        """
+        Apply discount rate when the total amount exceeds a certain threshold
+        :param price: price before discount
+        :return: price after discount
+        """
+        if price >= self.DISCOUNT_THRESHOLD:
+            return price * (1 - self.DISCOUNT_RATE)
+        return price
 
-    return price
+    def process_order(self, idx: int) -> None:
+        """
+        Process the order and accumulate the total price
+        :param idx: index of the ordered drink
+        """
+        print(f"{self.drinks[idx]} ordered. Price: {self.prices[idx]} won")
+        self.total_price += self.prices[idx]
+        self.amounts[idx] += 1
 
-def order_process(idx: int):
-    """
-    beverage function
-    :param idx: list's index number
-    """
-    global total_price
-    print(f"{drinks[idx]} ordered. Price : {prices[idx]}won")
-    total_price = total_price + prices[idx]
-    amounts[idx] = amounts[idx] + 1
+    # def display_menu(self) -> str:
+    #     """
+    #     Generate a dynamic menu string
+    #     :return: formatted menu string
+    #     """
+    #     return "".join(
+    #         [f"{k + 1}) {self.drinks[k]} {self.prices[k]} won  "
+    #          for k in range(len(self.drinks))]
+    #     ) + f"{len(self.drinks) + 1}) Exit : "
 
+    def print_receipt(self) -> None:
+        """Print order summary and final price with formatted alignment using f-string"""
+        print(f"\n{'Product':<15} {'Price':<10} {'Amount':<10} {'Subtotal':<10}")
+        print("-" * 50)
 
-# menu_lists = ""
-#for k in range(len(drinks)):
-#    menu_lists = menu_lists + f"{k+1}) {drinks[k]} {prices[k]}won  "
-menu_lists = " ".join([f"{k+1}) {drinks[k]} {prices[k]}won  " for k in range(len(drinks))])
-menu_lists = menu_lists + f"{len(drinks)+1}) Exit : "
+        for i in range(len(self.drinks)):
+            if self.amounts[i] > 0:
+                print(
+                    f"{self.drinks[i]:<15} {self.prices[i]:<10} {self.amounts[i]:<10} {self.prices[i] * self.amounts[i]:<10}")
 
-#help(abs)
-#help(len)
-help(order_process)
+        discounted_price = self.apply_discount(self.total_price)
+        discount = self.total_price - discounted_price
 
-while True:
-    try:
-        menu = int(input(menu_lists))
-        if len(drinks) >= menu >= 1:
-            order_process(menu - 1)
-        elif menu == len(drinks)+1:
-            print("Finish order~")
-            break
+        print("-" * 50)
+        print(f"{'Total price before discount:':<30} {self.total_price:>5}")
+        if discount > 0:
+            print(f"{'Discount amount:':<30} {discount:<10.0f}")
+            print(f"{'Total price after discount:':<30} {discounted_price:<10.0f}")
         else:
-            print(f"{menu} menu is not exist. please choose from above menu.")
-    except ValueError as err:
-        print(f"You cannot enter characters. Please eneter a valid number.\n{err}")
-print("Product  Price  Amount  Subtotal")
-for i in range(len(drinks)):
-    if amounts[i] > 0:
-        print(f"{drinks[i]} {prices[i]} x{amounts[i]} {prices[i] * amounts[i]}")
+            print(f"{'No discount applied.':<30}")
+            print(f"{'Total price:':<30} {self.total_price:>5}")
 
-discounted_price = apply_discount(total_price)
-discount_amount = total_price - discounted_price
-print(f"Original total price : {total_price}won")
-if discount_amount > 0 :
-    print(f"Discount_amount : {discount_amount}")
-    print(f"Total price after discount : {discounted_price}won")
-else:
-    print("The discount has not been applied.")
-    print(f"Total price : {total_price}won")
+    def run(self):
+        """Execute the order system"""
+
+        display_menu = "".join(
+            [f"{k + 1}) {self.drinks[k]} {self.prices[k]} won  "
+             for k in range(len(self.drinks))]
+        ) + f"{len(self.drinks) + 1}) Exit : "
+
+        while True:
+            try:
+                menu = int(input(display_menu))
+                if 1 <= menu <= len(self.drinks):
+                    self.process_order(menu - 1)
+                elif menu == len(self.drinks) + 1:
+                    print("Order finished~")
+                    break
+                else:
+                    print(f"Menu {menu} is invalid. Please choose from the above menu.")
+            except ValueError:
+                print("Please enter a valid number. Try again.")
+
+        self.print_receipt()
+
+
+if __name__ == "__main__":
+    menu_drinks = ["Ice Americano", "Cafe Latte", "Watermelon Juice"]
+    menu_prices = [2000, 3000, 4900]
+    # menu_drinks = ["Ice Americano", "Cafe Latte"]
+    # menu_prices = [2000, 3000]
+    cafe = CafeOrder(menu_drinks, menu_prices)
+    cafe.run()

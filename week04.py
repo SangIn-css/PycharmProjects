@@ -8,6 +8,21 @@ total_price = 0
 # amounts = [0, 0]
 # total_price = 0
 
+DISCOUNT_THRESHOLD = 10000
+DISCOUNT_RATE = 0.1
+
+def apply_discount(price: int):
+    """
+    discount calculate
+    :param price: price before discount
+    :return: price after discount
+    """
+    if price >= DISCOUNT_THRESHOLD:
+        discount = price * DISCOUNT_RATE
+        return price - discount
+
+    return price
+
 def order_process(idx: int):
     """
     beverage function
@@ -45,4 +60,13 @@ print("Product  Price  Amount  Subtotal")
 for i in range(len(drinks)):
     if amounts[i] > 0:
         print(f"{drinks[i]} {prices[i]} x{amounts[i]} {prices[i] * amounts[i]}")
-print(f"Total price : {total_price}")
+
+discounted_price = apply_discount(total_price)
+discount_amount = total_price - discounted_price
+print(f"Original total price : {total_price}won")
+if discount_amount > 0 :
+    print(f"Discount_amount : {discount_amount}")
+    print(f"Total price after discount : {discounted_price}won")
+else:
+    print("The discount has not been applied.")
+    print(f"Total price : {total_price}won")

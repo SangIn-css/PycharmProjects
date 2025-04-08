@@ -1,3 +1,4 @@
+from email.contentmanager import get_non_text_content
 from typing import List  # type hint
 
 
@@ -117,6 +118,20 @@ class OrderProcessor:
             print(f"{'No discount applied.':<30}")
             print(f"{'Total price:':<30} {self.total_price:>5}")
 
+    def get_next_ticket_number(self) -> int:
+        """
+        Function that Produce next ticket number
+        :return: next ticket number
+        """
+        with open("ticket_number.txt", "r") as fp:
+            number = int (fp.read())
+        number = number + 1
+
+        with open("ticket_number.txt", "w") as fp:
+            fp.write(str(number))
+
+        return number
+
     def run(self):
         """Execute the order system"""
 
@@ -137,3 +152,4 @@ class OrderProcessor:
                 print(e)  # Display the specific IndexError message
 
         self.print_receipt()
+        print(f"Queue number ticket : {self.get_next_ticket_number()}")
